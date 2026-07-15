@@ -162,6 +162,31 @@
   .tab-panel{ animation: fadein 0.15s ease; }
   @keyframes fadein{ from{ opacity: 0; } to{ opacity: 1; } }
 
+  @media (max-width: 640px){
+    .input-tabs{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      overflow-x: visible;
+      border-bottom: none;
+    }
+    .tab-btn{
+      margin-right: 0;
+      text-align: center;
+      white-space: normal;
+      line-height: 1.25;
+      padding: 12px 6px;
+      border: 1px solid var(--rule-strong);
+      border-bottom: 1px solid var(--rule-strong);
+      border-radius: 8px;
+      background: var(--bg-panel-2);
+    }
+    .tab-btn.active{
+      background: var(--accent-soft);
+      border-color: var(--accent);
+    }
+  }
+
   .formula-row{
     display: flex;
     gap: 10px;
