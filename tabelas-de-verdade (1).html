@@ -1,0 +1,2193 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tabelas de Verdade — Manuel da Cruz</title>
+
+<meta name="description" content="Gera tabelas de verdade a partir de fórmulas, linguagem natural ou argumentos clássicos. Testa a validade de argumentos, explora falácias formais e aprende lógica proposicional passo a passo.">
+<meta name="keywords" content="tabelas de verdade, lógica proposicional, lógica, filosofia, argumentos, falácias, modus ponens, silogismo, valores de verdade">
+<meta name="author" content="Manuel Da Cruz">
+<link rel="canonical" href="https://filosofianosecundario.github.io/tabelasdeverdade/">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Tabelas de Verdade — Manuel Da Cruz">
+<meta property="og:description" content="Gera tabelas de verdade a partir de fórmulas, linguagem natural ou argumentos clássicos. Testa a validade de argumentos e explora falácias formais.">
+<meta property="og:image" content="https://filosofianosecundario.github.io/tabelasdeverdade/og-image.png">
+<meta property="og:url" content="https://filosofianosecundario.github.io/tabelasdeverdade/">
+<meta property="og:locale" content="pt_PT">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Tabelas de Verdade — Manuel Da Cruz">
+<meta name="twitter:description" content="Gera tabelas de verdade a partir de fórmulas, linguagem natural ou argumentos clássicos.">
+<meta name="twitter:image" content="https://filosofianosecundario.github.io/tabelasdeverdade/og-image.png">
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2E5C8A">
+<link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="icon-512.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #F5F4EF;
+    --bg-panel: #FFFFFF;
+    --bg-panel-2: #EEEDE5;
+    --chalk: #22262B;
+    --chalk-dim: #6B7178;
+    --rule: rgba(34,38,43,0.10);
+    --rule-strong: rgba(34,38,43,0.20);
+    --accent: #2E5C8A;
+    --accent-soft: rgba(46,92,138,0.10);
+    --main-op: #7A4FA3;
+    --true-accent: #2E7D32;
+    --false-accent: #C0392B;
+    --error: #C0392B;
+    --radius: 10px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--chalk);
+    font-family: 'Space Grotesk', sans-serif;
+    min-height: 100%;
+  }
+
+  body {
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  .wrap{
+    position: relative;
+    z-index: 1;
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  header{
+    margin-bottom: 36px;
+  }
+
+  .title-row{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .header-logo{
+    height: 52px;
+    width: auto;
+    flex-shrink: 0;
+  }
+  @media (max-width: 560px){
+    .header-logo{ height: 40px; }
+  }
+
+  .eyebrow{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 10px;
+  }
+
+  h1{
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: clamp(32px, 5vw, 46px);
+    line-height: 1.08;
+    margin: 0 0 12px;
+    letter-spacing: -0.01em;
+  }
+
+  h1 em{
+    font-style: italic;
+    font-weight: 500;
+    color: var(--accent);
+  }
+
+  .sub{
+    font-size: 15.5px;
+    color: var(--chalk-dim);
+    max-width: 54ch;
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  /* formula card */
+  .card{
+    background: var(--bg-panel);
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius);
+    padding: 22px;
+    margin-bottom: 22px;
+  }
+
+  .input-tabs{
+    display: flex;
+    gap: 6px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--rule);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .input-tabs::-webkit-scrollbar{ display: none; }
+  .tab-btn{
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--chalk-dim);
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 10px 4px;
+    margin-right: 18px;
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .tab-btn:hover{ color: var(--chalk); }
+  .tab-btn.active{ color: var(--accent); border-bottom-color: var(--accent); }
+  .tab-panel{ animation: fadein 0.15s ease; }
+  @keyframes fadein{ from{ opacity: 0; } to{ opacity: 1; } }
+
+  @media (max-width: 640px){
+    .input-tabs{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      overflow-x: visible;
+      border-bottom: none;
+    }
+    .tab-btn{
+      margin-right: 0;
+      text-align: center;
+      white-space: normal;
+      line-height: 1.25;
+      padding: 12px 6px;
+      border: 1px solid var(--rule-strong);
+      border-bottom: 1px solid var(--rule-strong);
+      border-radius: 8px;
+      background: var(--bg-panel-2);
+    }
+    .tab-btn.active{
+      background: var(--accent-soft);
+      border-color: var(--accent);
+    }
+  }
+
+  .formula-row{
+    display: flex;
+    gap: 10px;
+    align-items: stretch;
+  }
+
+  #formula{
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--rule-strong);
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 19px;
+    color: var(--chalk);
+    letter-spacing: 0.01em;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  #formula:focus{
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(46,92,138,0.12);
+  }
+  #formula::placeholder{ color: #9AA0A6; }
+
+  #generate{
+    background: var(--accent);
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    padding: 0 22px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    transition: transform 0.1s ease, background 0.15s ease;
+    white-space: nowrap;
+  }
+  #generate:hover{ background: #3D72A0; }
+  #generate:active{ transform: scale(0.97); }
+
+  .symbols{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .sym-btn{
+    background: var(--bg-panel-2);
+    border: 1px solid var(--rule);
+    color: var(--chalk);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 15px;
+    border-radius: 6px;
+    padding: 6px 13px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+  .sym-btn:hover{ border-color: var(--accent); color: var(--accent); }
+  .sym-btn.wide{ font-family: 'Space Grotesk', sans-serif; font-size: 13px; }
+
+  .examples{
+    margin-top: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+  .examples-label{
+    font-size: 12px;
+    color: var(--chalk-dim);
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-right: 4px;
+  }
+  .example-chip{
+    background: transparent;
+    border: 1px dashed var(--rule-strong);
+    color: var(--chalk-dim);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13.5px;
+    border-radius: 20px;
+    padding: 5px 13px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .example-chip:hover{
+    border-color: var(--accent);
+    color: var(--chalk);
+  }
+
+  .error-box{
+    display: none;
+    margin-top: 14px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    background: rgba(192,57,43,0.08);
+    border: 1px solid rgba(192,57,43,0.4);
+    color: var(--error);
+    font-size: 14px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  /* natural language card */
+  .divider{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 22px 0;
+    color: #9AA0A6;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .divider::before, .divider::after{
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--rule);
+  }
+
+  .exercise-card{
+    display: none;
+    margin-top: 16px;
+    padding: 18px 20px;
+    background: var(--bg-panel-2);
+    border: 1px solid var(--rule-strong);
+    border-radius: 10px;
+  }
+  .exercise-card.show{ display: block; }
+  .exercise-label{
+    margin: 0 0 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--chalk-dim);
+  }
+  .exercise-content{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 18px;
+    color: var(--chalk);
+    margin-bottom: 16px;
+    line-height: 1.7;
+  }
+  .exercise-content .ex-premise{ display: block; }
+  .exercise-content .ex-concl{
+    display: block;
+    border-top: 1px solid var(--rule-strong);
+    margin-top: 6px;
+    padding-top: 8px;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  #show-solution-btn{
+    background: transparent;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    padding: 9px 18px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  #show-solution-btn:hover{ background: var(--accent); color: #fff; }
+
+  .nl-mode-row{
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .nl-mode-btn{
+    background: var(--bg-panel-2);
+    border: 1px solid var(--rule-strong);
+    color: var(--chalk-dim);
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .nl-mode-btn:hover{ color: var(--chalk); }
+  .nl-mode-btn.active{ background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  #natural-text{
+    width: 100%;
+    min-height: 78px;
+    resize: vertical;
+    background: var(--bg);
+    border: 1px solid var(--rule-strong);
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 17px;
+    color: var(--chalk);
+    outline: none;
+    line-height: 1.5;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  #natural-text:focus{
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(46,92,138,0.12);
+  }
+  #natural-text::placeholder{ color: #9AA0A6; font-style: italic; }
+
+  .natural-actions{
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 12px;
+  }
+
+  #translate-btn{
+    background: transparent;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 14.5px;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  #translate-btn:hover{ background: var(--accent); color: #FFFFFF; }
+
+  .translation-preview{
+    display: none;
+    margin-top: 16px;
+    padding: 14px 16px;
+    background: var(--bg-panel-2);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+  }
+  .translation-preview .tp-label{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--chalk-dim);
+    margin: 0 0 8px;
+  }
+  .translation-preview .tp-formula{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 17px;
+    color: var(--accent);
+    margin: 0 0 12px;
+    word-break: break-word;
+  }
+  .tp-legend{
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .tp-entry{
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding: 7px 4px;
+    border-bottom: 1px dashed var(--rule);
+    font-size: 14.5px;
+  }
+  .tp-entry:last-child{ border-bottom: none; }
+  .tp-entry .tp-letter{
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 15px;
+    min-width: 18px;
+    flex-shrink: 0;
+  }
+  .tp-entry .tp-letter::after{ content: ':'; }
+  .tp-entry .tp-phrase{ color: var(--chalk); font-style: italic; }
+
+  /* byline */
+  .byline{
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 14px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    color: var(--chalk-dim);
+  }
+  .byline b{ color: var(--accent); font-weight: 600; }
+
+  /* random generator card */
+  .generator-row{
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .dice-btn{
+    flex: 1;
+    min-width: 200px;
+    background: var(--bg-panel-2);
+    border: 1px solid var(--rule-strong);
+    color: var(--chalk);
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 14.5px;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color 0.15s ease, transform 0.1s ease, background 0.15s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .dice-btn:hover{ border-color: var(--accent); background: var(--bg-panel); }
+  .dice-btn:active{ transform: scale(0.98); }
+  .dice-btn .dice-icon{
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .dice-btn .dice-copy{ display: flex; flex-direction: column; gap: 2px; }
+  .dice-btn .dice-copy small{
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 400;
+    font-size: 12px;
+    color: var(--chalk-dim);
+  }
+
+  .accordion{ cursor: default; }
+  .accordion-summary{
+    cursor: pointer;
+    list-style: none;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--chalk);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 2px 0;
+  }
+  .accordion-summary::-webkit-details-marker{ display: none; }
+  .accordion-summary::before{
+    content: '▸';
+    color: var(--accent);
+    font-size: 13px;
+    transition: transform 0.15s ease;
+  }
+  details[open] > .accordion-summary::before{ transform: rotate(90deg); }
+  .accordion-hint{
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 400;
+    font-size: 12.5px;
+    color: var(--chalk-dim);
+  }
+  .accordion-body{ margin-top: 18px; }
+
+  .argument-picker-row{
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  #argument-select{
+    flex: 1;
+    min-width: 220px;
+    background: var(--bg);
+    border: 1px solid var(--rule-strong);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14.5px;
+    font-weight: 500;
+    color: var(--chalk);
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  #argument-select:focus{
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(46,92,138,0.12);
+  }
+  #argument-select option, #argument-select optgroup{
+    background: var(--bg-panel);
+    color: var(--chalk);
+  }
+
+  #generate-argument-btn{
+    background: var(--accent);
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    padding: 0 24px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 14.5px;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.1s ease;
+  }
+  #generate-argument-btn:hover{ background: #3D72A0; }
+  #generate-argument-btn:active{ transform: scale(0.97); }
+
+  .argument-panel{
+    display: none;
+    margin-top: 18px;
+    padding: 18px 20px;
+    background: var(--bg-panel-2);
+    border: 1px solid var(--rule-strong);
+    border-radius: 10px;
+  }
+  .argument-head{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .argument-name{
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 19px;
+    color: var(--chalk);
+  }
+  .argument-name span{
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 400;
+    font-size: 13px;
+    color: var(--chalk-dim);
+    margin-left: 6px;
+  }
+  .argument-lines{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 16px;
+  }
+  .argument-lines .a-line{
+    display: block;
+    padding: 4px 0;
+  }
+  .argument-lines .a-concl{
+    display: block;
+    border-top: 1px solid var(--rule-strong);
+    margin-top: 8px;
+    padding-top: 10px;
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .argument-counterexample{
+    display: none;
+    margin-top: 14px;
+    padding: 12px 14px;
+    background: rgba(192,57,43,0.08);
+    border: 1px solid var(--false-accent);
+    border-radius: 8px;
+    font-size: 13.5px;
+    color: var(--chalk-dim);
+    line-height: 1.5;
+  }
+  .argument-counterexample.show{ display: block; }
+  .argument-counterexample b{ color: var(--false-accent); font-family: 'IBM Plex Mono', monospace; }
+  .argument-counterexample.valid{ background: rgba(46,125,50,0.08); border-color: var(--true-accent); }
+  .argument-counterexample.valid b{ color: var(--true-accent); }
+
+  /* results */
+  #results{ display: none; }
+
+  .verdict-row{
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+
+  .verdict-left{ display: flex; flex-direction: column; gap: 4px; }
+
+  .verdict-formula{
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 22px;
+    color: var(--chalk);
+  }
+
+  .verdict-explain{
+    font-size: 13px;
+    color: var(--chalk-dim);
+    max-width: 46ch;
+  }
+
+  .verdict-badge{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 7px 14px;
+    border-radius: 20px;
+    border: 1px solid;
+    white-space: nowrap;
+  }
+  .badge-taut{ color: var(--true-accent); border-color: var(--true-accent); background: rgba(46,125,50,0.08); }
+  .badge-contra{ color: var(--false-accent); border-color: var(--false-accent); background: rgba(192,57,43,0.08); }
+  .badge-conting{ color: var(--chalk-dim); border-color: var(--rule-strong); background: rgba(237,234,224,0.04); }
+
+  .table-hint{
+    font-size: 12.5px;
+    color: var(--chalk-dim);
+    margin: 0 0 12px;
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .table-hint .hint-chip{
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .table-hint .swatch{
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+  }
+  .swatch-true{ background: var(--true-accent); }
+  .swatch-false{ background: var(--false-accent); }
+  .swatch-main{ background: rgba(122,79,163,0.35); border: 1px solid var(--main-op); }
+  .swatch-invalid{ background: rgba(192,57,43,0.25); border: 1px solid var(--false-accent); }
+
+  .table-scroll{
+    overflow-x: auto;
+    border-radius: var(--radius);
+    border: 1px solid var(--rule-strong);
+  }
+
+  table{
+    border-collapse: collapse;
+    width: 100%;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 15px;
+  }
+
+  thead th{
+    background: var(--bg-panel-2);
+    padding: 11px 14px;
+    text-align: center;
+    font-weight: 500;
+    color: var(--chalk-dim);
+    border-bottom: 1px solid var(--rule);
+    white-space: nowrap;
+  }
+
+  th.tok-concl-indicator{
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 17px;
+    background: var(--bg-panel-2);
+    border-left: 3px solid var(--accent);
+  }
+  td.tok-concl-indicator{
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 16.5px;
+    background: rgba(46,92,138,0.06);
+    border-left: 3px solid var(--accent);
+  }
+  .prem-divider{ border-right: 3px solid var(--accent) !important; }
+
+  .group-end{ border-right: 3px solid var(--accent); }
+
+  thead th.var-col{ color: var(--chalk); font-weight: 700; font-size: 17px; }
+  thead th.tok-var{ color: var(--chalk); font-weight: 700; font-size: 17px; }
+  thead th.tok-op{ color: var(--accent); font-weight: 700; font-size: 17px; }
+  thead th.tok-paren{ color: var(--chalk-dim); font-weight: 400; opacity: 0.55; padding-left: 6px; padding-right: 6px; }
+  thead th.tok-main{
+    color: var(--main-op);
+    background: var(--bg-panel-2);
+    font-weight: 800;
+  }
+
+  tbody td{
+    padding: 11px 14px;
+    text-align: center;
+    border-bottom: 1px solid var(--rule);
+    color: var(--chalk-dim);
+  }
+  tbody tr:last-child td{ border-bottom: none; }
+  tbody tr:hover td{ background: rgba(46,92,138,0.05); }
+
+  td.var-col{ font-weight: 700; font-size: 16.5px; }
+  td.tok-var{ font-weight: 700; font-size: 16.5px; }
+  td.tok-op{ font-weight: 700; font-size: 16.5px; }
+  td.tok-paren{ color: var(--chalk-dim); opacity: 0.5; font-weight: 400; padding-left: 6px; padding-right: 6px; }
+  td.tok-main{
+    background: rgba(122,79,163,0.14);
+    font-weight: 800;
+    box-shadow: inset 0 0 0 2px var(--main-op);
+  }
+
+  .val-true{ color: var(--true-accent); }
+  .val-false{ color: var(--false-accent); }
+
+  tr.row-invalid td{ background: rgba(192,57,43,0.12); }
+  tr.row-invalid td.tok-main{ box-shadow: inset 0 0 0 2px var(--false-accent); }
+
+  /* step-by-step mode */
+  .tok-op.pending{ color: var(--chalk-dim); opacity: 0.35; }
+  th.current-step, td.current-step{
+    background: rgba(46,92,138,0.18) !important;
+    box-shadow: inset 0 0 0 1px var(--accent);
+  }
+
+  .stepper-bar{
+    display: none;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    padding: 14px 16px;
+    background: var(--bg-panel);
+    border: 1px solid var(--rule-strong);
+    border-radius: 8px;
+  }
+  .stepper-bar.active{ display: flex; }
+  .stepper-controls{ display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+  .stepper-btn{
+    background: var(--bg-panel-2);
+    border: 1px solid var(--rule-strong);
+    color: var(--chalk);
+    border-radius: 6px;
+    padding: 7px 13px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .stepper-btn:hover:not(:disabled){ border-color: var(--accent); color: var(--accent); }
+  .stepper-btn:disabled{ opacity: 0.35; cursor: not-allowed; }
+  .stepper-count{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    color: var(--chalk-dim);
+    white-space: nowrap;
+  }
+  .stepper-caption{
+    flex: 1;
+    min-width: 220px;
+    font-size: 13.5px;
+    color: var(--chalk-dim);
+    line-height: 1.5;
+  }
+  .stepper-caption strong{ color: var(--accent); font-family: 'IBM Plex Mono', monospace; }
+  .stepper-exit{
+    background: transparent;
+    border: 1px dashed var(--rule-strong);
+    color: var(--chalk-dim);
+    border-radius: 6px;
+    padding: 7px 13px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .stepper-exit:hover{ color: var(--chalk); border-color: var(--chalk-dim); }
+
+  .step-toggle-row{
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 12px;
+  }
+  #step-mode-btn{
+    background: transparent;
+    border: 1px solid var(--rule-strong);
+    color: var(--chalk-dim);
+    border-radius: 20px;
+    padding: 7px 16px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+  #step-mode-btn:hover{ border-color: var(--accent); color: var(--accent); }
+  #step-mode-btn.on{ border-color: var(--accent); color: var(--accent); background: rgba(46,92,138,0.08); }
+
+  .legend{
+    margin-top: 26px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 10px;
+  }
+  .legend-item{
+    background: var(--bg-panel);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .xorsym{
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 2.5px;
+    text-decoration-color: currentColor;
+  }
+
+  .legend-sym{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 18px;
+    color: var(--accent);
+    min-width: 24px;
+  }
+  .legend-text{ font-size: 13px; color: var(--chalk-dim); }
+  .legend-text b{ color: var(--chalk); font-weight: 600; }
+
+  footer{
+    margin-top: 44px;
+    padding-top: 18px;
+    border-top: 1px solid var(--rule);
+    font-size: 12.5px;
+    color: #9AA0A6;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  @media (max-width: 560px){
+    .formula-row{ flex-direction: column; }
+    #generate{ padding: 12px; }
+    .verdict-formula{ font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="title-row">
+      <h1>Tabelas de <em>verdade</em></h1>
+      <img src="data:image/png;base64,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" alt="Professor Manuel Da Cruz" class="header-logo">
+    </div>
+  </header>
+
+  <div class="card">
+    <div class="input-tabs">
+      <button class="tab-btn active" data-tab="formula">✏️ Fórmula</button>
+      <button class="tab-btn" data-tab="natural">💬 Linguagem Natural</button>
+      <button class="tab-btn" data-tab="random">🧩 Exercícios</button>
+      <button class="tab-btn" data-tab="classic">📚 Inferências Clássicas</button>
+    </div>
+
+    <div class="tab-panel" id="tab-formula">
+      <div class="formula-row">
+        <input id="formula" type="text" placeholder="ex.: (P → Q) ↔ (¬P ∨ Q)" autocomplete="off" spellcheck="false">
+        <button id="generate">Gerar tabela</button>
+      </div>
+
+      <div class="symbols">
+        <button class="sym-btn" data-insert="¬">¬</button>
+        <button class="sym-btn" data-insert="∧">∧</button>
+        <button class="sym-btn" data-insert="∨">∨</button>
+        <button class="sym-btn" data-insert="∨/"><span class="xorsym">∨</span></button>
+        <button class="sym-btn" data-insert="→">→</button>
+        <button class="sym-btn" data-insert="↔">↔</button>
+        <button class="sym-btn" data-insert="(">(</button>
+        <button class="sym-btn" data-insert=")">)</button>
+        <button class="sym-btn" data-insert=",">,</button>
+        <button class="sym-btn" data-insert=" ∴ ">∴</button>
+        <button class="sym-btn wide" id="clear-btn">limpar</button>
+      </div>
+
+      <div class="examples">
+        <span class="examples-label">Exemplos</span>
+        <button class="example-chip" data-formula="P ∨ ¬P">P ∨ ¬P</button>
+        <button class="example-chip" data-formula="(P ∧ Q) → P">(P ∧ Q) → P</button>
+        <button class="example-chip" data-formula="(P → Q) ↔ (¬P ∨ Q)">(P → Q) ↔ (¬P ∨ Q)</button>
+        <button class="example-chip" data-formula="P ∨/ Q">P <span class="xorsym">∨</span> Q</button>
+        <button class="example-chip" data-formula="P → Q, P ∴ Q">P → Q, P ∴ Q</button>
+        <button class="example-chip" data-formula="P → Q, Q → R ∴ P → R">P → Q, Q → R ∴ P → R</button>
+      </div>
+
+      <p class="sub" style="margin-top:14px; font-size:12.5px;">Também podes escrever um argumento diretamente: separa premissas com <b style="color:var(--chalk)">,</b> e usa <b style="color:var(--chalk)">∴</b> antes da conclusão.</p>
+    </div>
+
+    <div class="tab-panel" id="tab-natural" hidden>
+      <div class="nl-mode-row">
+        <button class="nl-mode-btn active" data-mode="proposicao">Proposição</button>
+        <button class="nl-mode-btn" data-mode="argumento">Argumento</button>
+      </div>
+      <textarea id="natural-text" placeholder="ex.: Se chove, então a rua fica molhada."></textarea>
+      <div class="natural-actions">
+        <button id="translate-btn">Traduzir e gerar tabela</button>
+      </div>
+
+      <div class="translation-preview" id="translation-preview">
+        <p class="tp-label">Dicionário de Interpretação</p>
+        <div class="tp-legend" id="tp-legend"></div>
+        <p class="tp-label" style="margin-top:16px;">Fórmula simbólica</p>
+        <p class="tp-formula" id="tp-formula"></p>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="tab-random" hidden>
+      <div class="nl-mode-row">
+        <button class="nl-mode-btn" id="random-formula-btn">Fórmula</button>
+        <button class="nl-mode-btn" id="random-argument-btn">Argumento</button>
+      </div>
+
+      <div class="exercise-card" id="exercise-card">
+        <p class="exercise-label">Exercício</p>
+        <div class="exercise-content" id="exercise-content"></div>
+        <button id="show-solution-btn">Ver solução</button>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="tab-classic" hidden>
+      <div class="argument-picker-row">
+        <select id="argument-select">
+          <optgroup label="Regras válidas">
+            <option value="mp">Modus Ponens</option>
+            <option value="mt">Modus Tollens</option>
+            <option value="hs">Silogismo Hipotético</option>
+            <option value="ds">Silogismo Disjuntivo</option>
+            <option value="dn2">Dupla Negação</option>
+            <option value="contra">Contraposição</option>
+            <option value="dm1">Leis de De Morgan (¬(A∧B))</option>
+            <option value="dm2">Leis de De Morgan (¬(A∨B))</option>
+          </optgroup>
+          <optgroup label="Falácias formais">
+            <option value="aac">Falácia da Afirmação do Consequente</option>
+            <option value="nan">Falácia da Negação do Antecedente</option>
+          </optgroup>
+        </select>
+      </div>
+    </div>
+
+    <div class="argument-panel" id="argument-panel">
+      <div class="argument-head">
+        <div class="argument-name" id="argument-name"></div>
+        <div class="verdict-badge" id="argument-badge"></div>
+      </div>
+      <div class="argument-lines" id="argument-lines"></div>
+      <div class="argument-counterexample" id="argument-counterexample"></div>
+    </div>
+
+    <div class="error-box" id="error-box"></div>
+  </div>
+
+
+  <div id="results">
+    <div class="verdict-row">
+      <div class="verdict-left">
+        <div class="verdict-formula" id="verdict-formula"></div>
+        <div class="verdict-explain" id="verdict-explain"></div>
+      </div>
+      <div class="verdict-badge" id="verdict-badge"></div>
+    </div>
+
+    <div class="step-toggle-row">
+      <button id="step-mode-btn">🪜 Modo passo a passo</button>
+    </div>
+
+    <div class="stepper-bar" id="stepper-bar">
+      <div class="stepper-controls">
+        <button class="stepper-btn" id="step-prev">← Anterior</button>
+        <button class="stepper-btn" id="step-next">Seguinte →</button>
+      </div>
+      <div class="stepper-count" id="stepper-count"></div>
+      <div class="stepper-caption" id="stepper-caption"></div>
+      <button class="stepper-exit" id="step-exit">sair</button>
+    </div>
+
+    <p class="table-hint">
+      <span class="hint-chip"><span class="swatch swatch-true"></span>V = Verdadeiro</span>
+      <span class="hint-chip"><span class="swatch swatch-false"></span>F = Falso</span>
+      <span class="hint-chip"><span class="swatch swatch-main"></span>operador principal</span>
+      <span class="hint-chip"><span class="swatch swatch-invalid"></span>linha que prova a invalidade</span>
+    </p>
+
+    <div class="table-scroll">
+      <table id="truth-table"></table>
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><span class="legend-sym">¬</span><span class="legend-text"><b>Negação</b> — não P</span></div>
+    <div class="legend-item"><span class="legend-sym">∧</span><span class="legend-text"><b>Conjunção</b> — P e Q</span></div>
+    <div class="legend-item"><span class="legend-sym">∨</span><span class="legend-text"><b>Disjunção Inclusiva</b> — P ou Q</span></div>
+    <div class="legend-item"><span class="legend-sym"><span class="xorsym">∨</span></span><span class="legend-text"><b>Disjunção exclusiva</b> — ou P ou Q, não ambos</span></div>
+    <div class="legend-item"><span class="legend-sym">→</span><span class="legend-text"><b>Condicional</b> — se P então Q. Também aceita -&gt;</span></div>
+    <div class="legend-item"><span class="legend-sym">↔</span><span class="legend-text"><b>Bicondicional</b> — P se e só se Q. Também aceita &lt;-&gt;</span></div>
+  </div>
+
+
+  <footer>© <span id="footer-year"></span> professor Manuel Da Cruz · conteúdo e conceção pedagógica da sua autoria, desenvolvido com apoio de IA</footer>
+</div>
+
+<script>
+/* ---------- Parser ---------- */
+
+function preprocess(str){
+  return str
+    .replace(/<->|<=>/g, '↔')
+    .replace(/->|=>/g, '→')
+    .replace(/\bxor\b/gi, '∨/')
+    .replace(/⊕|⊻/g, '∨/');
+}
+
+function tokenize(str){
+  const tokens = [];
+  let i = 0;
+  while (i < str.length){
+    const ch = str[i];
+    if (/\s/.test(ch)){ i++; continue; }
+    if (ch === '∨' && str[i + 1] === '/'){ tokens.push({type: '⊕'}); i += 2; continue; }
+    if ('¬∧∨→↔()'.includes(ch)){ tokens.push({type: ch}); i++; continue; }
+    if (/[A-Za-z]/.test(ch)){ tokens.push({type: 'VAR', name: ch}); i++; continue; }
+    throw new Error(`Símbolo não reconhecido: "${ch}"`);
+  }
+  return tokens;
+}
+
+class Parser{
+  constructor(tokens){ this.tokens = tokens; this.pos = 0; }
+  peek(){ return this.tokens[this.pos]; }
+  next(){ return this.tokens[this.pos++]; }
+  expect(type){
+    const t = this.next();
+    if (!t || t.type !== type) throw new Error(`Esperava "${type}" mas encontrei ${t ? t.type : 'fim da fórmula'}.`);
+    return t;
+  }
+
+  parse(){
+    if (this.tokens.length === 0) throw new Error('Escreve uma fórmula primeiro.');
+    const node = this.parseIff();
+    if (this.pos < this.tokens.length) throw new Error(`Sobrou algo inesperado perto de "${this.peek().type === 'VAR' ? this.peek().name : this.peek().type}".`);
+    return node;
+  }
+
+  parseIff(){
+    let left = this.parseImplies();
+    while (this.peek() && this.peek().type === '↔'){
+      this.next();
+      const right = this.parseImplies();
+      left = { type: 'iff', l: left, r: right };
+    }
+    return left;
+  }
+
+  parseImplies(){
+    const left = this.parseOr();
+    if (this.peek() && this.peek().type === '→'){
+      this.next();
+      const right = this.parseImplies(); // right-associative
+      return { type: 'implies', l: left, r: right };
+    }
+    return left;
+  }
+
+  parseOr(){
+    let left = this.parseAnd();
+    while (this.peek() && (this.peek().type === '∨' || this.peek().type === '⊕')){
+      const opType = this.next().type;
+      const right = this.parseAnd();
+      left = { type: opType === '⊕' ? 'xor' : 'or', l: left, r: right };
+    }
+    return left;
+  }
+
+  parseAnd(){
+    let left = this.parseNot();
+    while (this.peek() && this.peek().type === '∧'){
+      this.next();
+      const right = this.parseNot();
+      left = { type: 'and', l: left, r: right };
+    }
+    return left;
+  }
+
+  parseNot(){
+    if (this.peek() && this.peek().type === '¬'){
+      this.next();
+      const arg = this.parseNot();
+      return { type: 'not', arg };
+    }
+    return this.parseAtom();
+  }
+
+  parseAtom(){
+    const t = this.peek();
+    if (!t) throw new Error('A fórmula termina de forma inesperada.');
+    if (t.type === 'VAR'){ this.next(); return { type: 'var', name: t.name }; }
+    if (t.type === '('){
+      this.next();
+      const node = this.parseIff();
+      this.expect(')');
+      return node;
+    }
+    throw new Error(`Não esperava "${t.type}" aqui.`);
+  }
+}
+
+function parseFormula(raw){
+  const clean = preprocess(raw);
+  const tokens = tokenize(clean);
+  const parser = new Parser(tokens);
+  return parser.parse();
+}
+
+/* ---------- Evaluation & formatting ---------- */
+
+const OP_SYMBOL = { and: '∧', or: '∨', xor: '∨/', implies: '→', iff: '↔' };
+const BINARY_TYPES = ['and', 'or', 'xor', 'implies', 'iff'];
+
+function collectVars(node, set){
+  if (node.type === 'var'){ set.add(node.name); return; }
+  if (node.type === 'not'){ collectVars(node.arg, set); return; }
+  collectVars(node.l, set); collectVars(node.r, set);
+}
+
+function fmt(node){
+  if (node.type === 'var') return node.name;
+  if (node.type === 'not'){
+    let inner = fmt(node.arg);
+    if (BINARY_TYPES.includes(node.arg.type)) inner = '(' + inner + ')';
+    return '¬' + inner;
+  }
+  let l = fmt(node.l);
+  let r = fmt(node.r);
+  if (BINARY_TYPES.includes(node.l.type)) l = '(' + l + ')';
+  if (BINARY_TYPES.includes(node.r.type)) r = '(' + r + ')';
+  return `${l} ${OP_SYMBOL[node.type]} ${r}`;
+}
+
+function flatten(node){
+  if (node.type === 'var') return [{ kind: 'var', text: node.name, node }];
+  if (node.type === 'not'){
+    let argTokens = flatten(node.arg);
+    if (BINARY_TYPES.includes(node.arg.type)){
+      argTokens = [{ kind: 'paren', text: '(' }, ...argTokens, { kind: 'paren', text: ')' }];
+    }
+    return [{ kind: 'op', text: '¬', node }, ...argTokens];
+  }
+  let lTokens = flatten(node.l);
+  if (BINARY_TYPES.includes(node.l.type)){
+    lTokens = [{ kind: 'paren', text: '(' }, ...lTokens, { kind: 'paren', text: ')' }];
+  }
+  let rTokens = flatten(node.r);
+  if (BINARY_TYPES.includes(node.r.type)){
+    rTokens = [{ kind: 'paren', text: '(' }, ...rTokens, { kind: 'paren', text: ')' }];
+  }
+  return [...lTokens, { kind: 'op', text: OP_SYMBOL[node.type], node }, ...rTokens];
+}
+
+// postorder list of operator nodes (innermost first, root/main operator last)
+// argument formulas are always built as "(p1) ∧ (p2) ∧ ... → (conclusion)";
+// this recovers the individual premise nodes in order, reusing the very
+// same AST nodes that are inside `ast` (important so step-mode's node
+// identity lookups keep working)
+function unwindAnd(node){
+  if (node.type !== 'and') return [node];
+  return [...unwindAnd(node.l), node.r];
+}
+
+function getOperatorSteps(node){
+  const steps = [];
+  function visit(n){
+    if (n.type === 'var') return;
+    if (n.type === 'not'){ visit(n.arg); } else { visit(n.l); visit(n.r); }
+    steps.push(n);
+  }
+  visit(node);
+  return steps;
+}
+
+const STEP_DESCRIPTIONS = {
+  not: 'negação — troca-se o valor: V passa a F, F passa a V.',
+  and: 'conjunção — só é V quando os dois lados são V.',
+  or: 'disjunção — é V quando pelo menos um dos lados é V.',
+  xor: 'disjunção exclusiva — é V quando os dois lados têm valores diferentes.',
+  implies: 'condicional — só é F quando o antecedente é V e o consequente é F.',
+  iff: 'bicondicional — é V quando os dois lados têm o mesmo valor.'
+};
+
+function evaluate(node, env){
+  switch(node.type){
+    case 'var': return env[node.name];
+    case 'not': return !evaluate(node.arg, env);
+    case 'and': return evaluate(node.l, env) && evaluate(node.r, env);
+    case 'or': return evaluate(node.l, env) || evaluate(node.r, env);
+    case 'xor': return evaluate(node.l, env) !== evaluate(node.r, env);
+    case 'implies': return (!evaluate(node.l, env)) || evaluate(node.r, env);
+    case 'iff': return evaluate(node.l, env) === evaluate(node.r, env);
+  }
+}
+
+/* ---------- UI wiring ---------- */
+
+const formulaInput = document.getElementById('formula');
+const errorBox = document.getElementById('error-box');
+const resultsBox = document.getElementById('results');
+const verdictFormula = document.getElementById('verdict-formula');
+const verdictBadge = document.getElementById('verdict-badge');
+const tableEl = document.getElementById('truth-table');
+
+// step-by-step mode state
+let stepModeOn = false;
+let currentStep = 0;
+let lastSteps = [];
+let lastRoot = null;
+let lastRows = [];
+let lastVars = [];
+// set by the classic-form / random-argument buttons just before calling
+// generate(), so the verdict badge shows "Válido/Inválido" instead of
+// "Tautologia/Contradição/Contingência"
+let pendingIsArgument = false;
+// carries the exact premise/conclusion strings for the classic-form and
+// random-argument paths, so the table can parse each one individually
+// instead of trying to reconstruct them from the combined formula (that
+// reconstruction breaks when a premise's own top connective is "∧", e.g.
+// "R ∧ R" — it would get mistaken for two separate premises)
+let pendingArgumentParts = null;
+// holds a generated exercise (Exercícios tab) until the person clicks
+// "Ver solução" — so the table/validity isn't shown right away
+let pendingExercise = null;
+
+function showError(msg){
+  errorBox.textContent = msg;
+  errorBox.style.display = 'block';
+  resultsBox.style.display = 'none';
+}
+
+function hideError(){
+  errorBox.style.display = 'none';
+}
+
+// Recognises the ","  (premise separator) and ".:." (conclusion marker)
+// syntax, e.g. "P → Q, P ∴ Q", and expands it into a plain implication
+// formula the normal parser already understands.
+// Recognises the ","  (premise separator) and "∴" (conclusion marker)
+// syntax, e.g. "P → Q, P ∴ Q", and expands it into a plain implication
+// formula the normal parser already understands. ".:." is accepted as an
+// easy-to-type alias for "∴".
+function expandArgumentSyntax(raw){
+  raw = raw.replace(/\.:\./g, '∴');
+  const marker = '∴';
+  const count = raw.split(marker).length - 1;
+  if (count === 0){
+    if (raw.includes(',')){
+      throw new Error('Encontrei uma vírgula mas não uma conclusão. Para escrever um argumento, separa as premissas com vírgulas e usa ∴ antes da conclusão — ex.: P → Q, P ∴ Q');
+    }
+    return { formula: raw, isArgument: false, premises: null, conclusion: null };
+  }
+  if (count > 1){
+    throw new Error('Só pode haver um símbolo de conclusão (∴) por argumento.');
+  }
+  const idx = raw.indexOf(marker);
+  const premisesPart = raw.slice(0, idx);
+  const conclusionPart = raw.slice(idx + marker.length);
+  const premises = premisesPart.split(',').map(p => p.trim()).filter(p => p.length > 0);
+  const conclusion = conclusionPart.trim();
+  if (premises.length === 0) throw new Error('Escreve pelo menos uma premissa antes de "∴"');
+  if (!conclusion) throw new Error('Escreve a conclusão depois de "∴"');
+  const formula = `(${premises.join(') ∧ (')}) → (${conclusion})`;
+  return { formula, isArgument: true, premises, conclusion };
+}
+
+function generate(){
+  document.getElementById('argument-panel').style.display = 'none';
+  const raw = formulaInput.value.trim();
+  if (!raw){ showError('Escreve uma fórmula primeiro.'); return; }
+
+  let expansion;
+  try{
+    expansion = expandArgumentSyntax(raw);
+  } catch(e){
+    showError(e.message);
+    return;
+  }
+
+  let ast;
+  try{
+    ast = parseFormula(expansion.formula);
+  } catch(e){
+    showError(e.message || 'Não consegui interpretar esta fórmula.');
+    return;
+  }
+
+  const isArgumentMode = pendingIsArgument || expansion.isArgument;
+  pendingIsArgument = false;
+
+  if (isArgumentMode){
+    // re-print through fmt() so the input box doesn't show parentheses that
+    // aren't structurally needed (e.g. "¬¬P → P" instead of "(¬¬P) → (P)")
+    formulaInput.value = fmt(ast);
+  }
+
+  const varSet = new Set();
+  collectVars(ast, varSet);
+  const vars = Array.from(varSet).sort();
+
+  if (vars.length === 0){
+    showError('Não encontrei nenhuma variável (P, Q, R…) na fórmula.');
+    return;
+  }
+  if (vars.length > 6){
+    showError(`Encontrei ${vars.length} variáveis — o limite é 6, para a tabela não ficar gigante.`);
+    return;
+  }
+
+  hideError();
+
+  const nRows = 1 << vars.length;
+
+  const isArgumentTable = isArgumentMode && ast.type === 'implies';
+  let conclusionNode = null, premiseNodes = null;
+  if (isArgumentTable){
+    // prefer the exact original strings (each parsed on its own) — trying to
+    // recover premises by splitting the combined "(p1) ∧ (p2) → (c)" formula
+    // back apart is ambiguous whenever a premise's own top connective is "∧"
+    // (e.g. "R ∧ R" would be mistaken for two separate premises "R" and "R")
+    const parts = expansion.isArgument
+      ? { premises: expansion.premises, conclusion: expansion.conclusion }
+      : pendingArgumentParts;
+    if (parts){
+      premiseNodes = parts.premises.map(p => parseFormula(p));
+      conclusionNode = parseFormula(parts.conclusion);
+    } else {
+      // fallback, shouldn't normally happen
+      conclusionNode = ast.r;
+      premiseNodes = unwindAnd(ast.l);
+    }
+  }
+  pendingArgumentParts = null;
+
+  // step-by-step order: for a normal formula, its own operators innermost
+  // first; for an argument, each premise's operators (in order), then the
+  // conclusion's — the connecting ∧ / → aren't shown as columns anymore,
+  // so they don't get their own step either
+  const steps = isArgumentTable
+    ? [...premiseNodes.flatMap(n => getOperatorSteps(n)), ...getOperatorSteps(conclusionNode)]
+    : getOperatorSteps(ast);
+  const stepIndexOf = new Map();
+  steps.forEach((n, i) => stepIndexOf.set(n, i));
+
+  const rows = [];
+  let allTrue = true, allFalse = true;
+
+  for (let r = 0; r < nRows; r++){
+    const env = {};
+    vars.forEach((v, idx) => {
+      env[v] = ((r >> (vars.length - idx - 1)) & 1) === 0; // start at all-true (V), end at all-false (F)
+    });
+    const finalVal = evaluate(ast, env);
+    if (finalVal) allFalse = false; else allTrue = false;
+    rows.push({ env, finalVal });
+  }
+
+  // for arguments: every row where the combined formula is false is a
+  // counterexample (all premises true, conclusion false) — those rows get
+  // a horizontal highlight. If the argument is valid there are none.
+  const invalidRows = new Set();
+  if (isArgumentTable){
+    rows.forEach((row, idx) => { if (!row.finalVal) invalidRows.add(idx); });
+  }
+
+  let thead, tbody;
+
+  if (isArgumentTable){
+    // separate columns for each premise, a ".:." indicator, and the conclusion —
+    // the grouping is visible from the columns themselves (comma between
+    // premises, the accented ".:." column before the conclusion), no titles needed
+    const premiseGroups = premiseNodes.map(n => flatten(n));
+    const conclTokens = flatten(conclusionNode);
+
+    const tokenHeaderCell = (t, isRoot) => {
+      let cls = t.kind === 'op' ? 'tok-op' : (t.kind === 'paren' ? 'tok-paren' : 'tok-var');
+      if (isRoot) cls += ' tok-main';
+      const headStep = t.kind === 'op' ? ` data-head-step="${stepIndexOf.get(t.node)}"` : '';
+      return `<th class="${cls}"${headStep}>${symbolicToHtml(t.text)}</th>`;
+    };
+
+    thead = '<thead><tr>';
+    vars.forEach((v, vi) => thead += `<th class="var-col${vi === vars.length - 1 ? ' group-end' : ''}">${v}</th>`);
+    premiseGroups.forEach((group, gi) => {
+      group.forEach((t, ti) => {
+        const isGroupLast = ti === group.length - 1;
+        thead += tokenHeaderCell(t, t.node === premiseNodes[gi]).replace('class="', `class="${isGroupLast ? 'prem-divider ' : ''}`);
+      });
+    });
+    thead += `<th class="tok-concl-indicator">∴</th>`;
+    conclTokens.forEach(t => { thead += tokenHeaderCell(t, t.node === conclusionNode); });
+    thead += '</tr></thead>';
+
+    tbody = '<tbody>';
+    rows.forEach((row, rowIdx) => {
+      const tokenBodyCell = (t, isRoot, extraCls) => {
+        if (t.kind === 'paren') return `<td class="tok-paren${extraCls || ''}">${t.text}</td>`;
+        const val = t.kind === 'var' ? row.env[t.node.name] : evaluate(t.node, row.env);
+        const real = val ? 'V' : 'F';
+        let cls = t.kind === 'op' ? 'tok-op' : 'tok-var';
+        cls += val ? ' val-true' : ' val-false';
+        if (extraCls) cls += extraCls;
+        if (isRoot) cls += ' tok-main';
+        if (t.kind === 'op'){
+          return `<td class="${cls}" data-step="${stepIndexOf.get(t.node)}" data-real="${real}">${real}</td>`;
+        }
+        return `<td class="${cls}">${real}</td>`;
+      };
+
+      tbody += `<tr${invalidRows.has(rowIdx) ? ' class="row-invalid"' : ''}>`;
+      vars.forEach((v, vi) => {
+        const real = row.env[v] ? 'V' : 'F';
+        const extra = vi === vars.length - 1 ? ' group-end' : '';
+        tbody += `<td class="var-col${extra} ${row.env[v] ? 'val-true' : 'val-false'}">${real}</td>`;
+      });
+      premiseGroups.forEach((group, gi) => {
+        group.forEach((t, ti) => {
+          const isGroupLast = ti === group.length - 1;
+          tbody += tokenBodyCell(t, t.node === premiseNodes[gi], isGroupLast ? ' prem-divider' : '');
+        });
+      });
+      tbody += `<td class="tok-concl-indicator">∴</td>`;
+      conclTokens.forEach(t => { tbody += tokenBodyCell(t, t.node === conclusionNode); });
+      tbody += '</tr>';
+    });
+    tbody += '</tbody>';
+
+  } else {
+    // single formula, token by token — no titles, letters separated from the
+    // rest of the formula by a border
+    const tokens = flatten(ast);
+
+    thead = '<thead><tr>';
+    vars.forEach((v, vi) => thead += `<th class="var-col${vi === vars.length - 1 ? ' group-end' : ''}">${v}</th>`);
+    tokens.forEach(t => {
+      const isMain = t.node === ast;
+      let cls = t.kind === 'op' ? 'tok-op' : (t.kind === 'paren' ? 'tok-paren' : 'tok-var');
+      if (isMain) cls += ' tok-main';
+      const headStep = t.kind === 'op' ? ` data-head-step="${stepIndexOf.get(t.node)}"` : '';
+      thead += `<th class="${cls}"${headStep}>${symbolicToHtml(t.text)}</th>`;
+    });
+    thead += '</tr></thead>';
+
+    tbody = '<tbody>';
+    rows.forEach((row, rowIdx) => {
+      tbody += '<tr>';
+      vars.forEach((v, vi) => {
+        const real = row.env[v] ? 'V' : 'F';
+        const extra = vi === vars.length - 1 ? ' group-end' : '';
+        tbody += `<td class="var-col${extra} ${row.env[v] ? 'val-true' : 'val-false'}">${real}</td>`;
+      });
+      tokens.forEach(t => {
+        if (t.kind === 'paren'){
+          tbody += `<td class="tok-paren">${t.text}</td>`;
+          return;
+        }
+        const isMain = t.node === ast;
+        let cls = t.kind === 'op' ? 'tok-op' : 'tok-var';
+        if (isMain) cls += ' tok-main';
+        const val = t.kind === 'var' ? row.env[t.node.name] : evaluate(t.node, row.env);
+        const real = val ? 'V' : 'F';
+        cls += val ? ' val-true' : ' val-false';
+        if (t.kind === 'op'){
+          tbody += `<td class="${cls}" data-step="${stepIndexOf.get(t.node)}" data-real="${real}">${real}</td>`;
+        } else {
+          tbody += `<td class="${cls}">${real}</td>`;
+        }
+      });
+      tbody += '</tr>';
+    });
+    tbody += '</tbody>';
+  }
+
+  tableEl.innerHTML = thead + tbody;
+
+  const explainEl = document.getElementById('verdict-explain');
+  if (isArgumentMode){
+    verdictFormula.innerHTML = '';
+    if (allTrue){
+      verdictBadge.textContent = 'Válido';
+      verdictBadge.className = 'verdict-badge badge-taut';
+    } else {
+      verdictBadge.textContent = 'Inválido';
+      verdictBadge.className = 'verdict-badge badge-contra';
+    }
+    explainEl.textContent = '';
+  } else if (allTrue){
+    verdictFormula.innerHTML = symbolicToHtml(fmt(ast));
+    verdictBadge.textContent = 'Tautologia';
+    verdictBadge.className = 'verdict-badge badge-taut';
+    explainEl.textContent = 'É sempre verdadeira: repara na coluna do operador principal (destacada) — tem V em todas as linhas, seja qual for o valor de P, Q ou R. É essa a prova.';
+  } else if (allFalse){
+    verdictFormula.innerHTML = symbolicToHtml(fmt(ast));
+    verdictBadge.textContent = 'Contradição';
+    verdictBadge.className = 'verdict-badge badge-contra';
+    explainEl.textContent = 'É sempre falsa: repara na coluna do operador principal (destacada) — tem F em todas as linhas, seja qual for o valor de P, Q ou R. É essa a prova.';
+  } else {
+    verdictFormula.innerHTML = symbolicToHtml(fmt(ast));
+    verdictBadge.textContent = 'Contingência';
+    verdictBadge.className = 'verdict-badge badge-conting';
+    explainEl.textContent = 'Depende dos valores: a coluna do operador principal (destacada) mostra V nalgumas linhas e F noutras — prova de que não é sempre verdadeira nem sempre falsa.';
+  }
+
+  lastSteps = steps;
+  lastRoot = ast;
+  lastRows = rows;
+  lastVars = vars;
+
+  if (expansion.isArgument){
+    const arg = { name: 'Argumento (fórmula introduzida)', abbr: null, premises: expansion.premises, conclusion: expansion.conclusion };
+    attachValidityInfo(arg);
+    renderArgument(arg);
+  }
+
+  stepModeOn = false;
+  currentStep = steps.length;
+  document.getElementById('stepper-bar').classList.remove('active');
+  document.getElementById('step-mode-btn').classList.remove('on');
+  document.getElementById('step-mode-btn').textContent = '🪜 Modo passo a passo';
+
+  resultsBox.style.display = 'block';
+}
+
+function escapeHtml(s){
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// Renders a formula/token string as safe HTML, drawing the exclusive-or
+// symbol (stored internally as the parseable "∨/") as a ∨ with a CSS
+// underline instead — this always renders correctly, unlike relying on a
+// combining Unicode character, which shows as a broken glyph in some fonts.
+function symbolicToHtml(s){
+  return escapeHtml(s).split('∨/').join('<span class="xorsym">∨</span>');
+}
+
+function applyStepVisibility(){
+  document.querySelectorAll('#truth-table td[data-step]').forEach(el => {
+    const idx = parseInt(el.getAttribute('data-step'), 10);
+    const real = el.getAttribute('data-real');
+    if (!stepModeOn || idx < currentStep){
+      el.textContent = real;
+      el.classList.remove('pending');
+    } else {
+      el.textContent = '·';
+      el.classList.add('pending');
+    }
+    el.classList.toggle('current-step', stepModeOn && idx === currentStep - 1);
+  });
+  document.querySelectorAll('#truth-table th[data-head-step]').forEach(el => {
+    const idx = parseInt(el.getAttribute('data-head-step'), 10);
+    el.classList.toggle('current-step', stepModeOn && idx === currentStep - 1);
+  });
+
+  const prevBtn = document.getElementById('step-prev');
+  const nextBtn = document.getElementById('step-next');
+  const countEl = document.getElementById('stepper-count');
+  const captionEl = document.getElementById('stepper-caption');
+
+  prevBtn.disabled = currentStep <= 0;
+  nextBtn.disabled = currentStep >= lastSteps.length;
+  countEl.textContent = `Passo ${currentStep} de ${lastSteps.length}`;
+
+  if (currentStep === 0){
+    captionEl.innerHTML = 'Começamos só com os valores das letras proposicionais. Clica em <strong>Seguinte</strong> para calcular o primeiro operador.';
+  } else {
+    const node = lastSteps[currentStep - 1];
+    const isMain = node === lastRoot;
+    const desc = STEP_DESCRIPTIONS[node.type] || '';
+    let html = `calculamos <strong>${symbolicToHtml(fmt(node))}</strong> — ${desc}`;
+    if (isMain) html += ' Esta é a coluna principal: o valor da fórmula, nesta linha.';
+    captionEl.innerHTML = html;
+  }
+}
+
+document.getElementById('step-mode-btn').addEventListener('click', () => {
+  if (lastSteps.length === 0) return;
+  stepModeOn = !stepModeOn;
+  const btn = document.getElementById('step-mode-btn');
+  const bar = document.getElementById('stepper-bar');
+  if (stepModeOn){
+    currentStep = 0;
+    btn.classList.add('on');
+    btn.textContent = '🪜 Sair do modo passo a passo';
+    bar.classList.add('active');
+  } else {
+    currentStep = lastSteps.length;
+    btn.classList.remove('on');
+    btn.textContent = '🪜 Modo passo a passo';
+    bar.classList.remove('active');
+  }
+  applyStepVisibility();
+});
+
+document.getElementById('step-next').addEventListener('click', () => {
+  if (currentStep < lastSteps.length){ currentStep++; applyStepVisibility(); }
+});
+document.getElementById('step-prev').addEventListener('click', () => {
+  if (currentStep > 0){ currentStep--; applyStepVisibility(); }
+});
+document.getElementById('step-exit').addEventListener('click', () => {
+  stepModeOn = false;
+  currentStep = lastSteps.length;
+  document.getElementById('step-mode-btn').classList.remove('on');
+  document.getElementById('step-mode-btn').textContent = '🪜 Modo passo a passo';
+  document.getElementById('stepper-bar').classList.remove('active');
+  applyStepVisibility();
+});
+
+document.getElementById('generate').addEventListener('click', generate);
+formulaInput.addEventListener('keydown', e => { if (e.key === 'Enter') generate(); });
+
+document.querySelectorAll('.sym-btn[data-insert]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const sym = btn.getAttribute('data-insert');
+    const start = formulaInput.selectionStart ?? formulaInput.value.length;
+    const end = formulaInput.selectionEnd ?? formulaInput.value.length;
+    const val = formulaInput.value;
+    formulaInput.value = val.slice(0, start) + sym + val.slice(end);
+    formulaInput.focus();
+    formulaInput.selectionStart = formulaInput.selectionEnd = start + sym.length;
+  });
+});
+
+document.getElementById('clear-btn').addEventListener('click', () => {
+  formulaInput.value = '';
+  formulaInput.focus();
+  hideError();
+  resultsBox.style.display = 'none';
+});
+
+document.querySelectorAll('.example-chip[data-formula]').forEach(chip => {
+  chip.addEventListener('click', () => {
+    formulaInput.value = chip.getAttribute('data-formula');
+    generate();
+  });
+});
+
+/* ---------- Natural language translation ---------- */
+
+// Marker characters used internally while scanning, chosen to never collide
+// with letters a natural sentence would contain.
+const NL_MARKERS = {
+  NOT: '¬', AND: '∧', OR: '∨', IMP: '→', IFF: '↔', LP: '(', RP: ')'
+};
+
+function translateNatural(raw, shared){
+  let s = ' ' + raw.trim() + ' ';
+  if (!raw.trim()) throw new Error('Escreve uma frase primeiro.');
+
+  // normalize accession-free variants
+  s = s.replace(/\bnao\b/gi, 'não');
+  s = s.replace(/\bentao\b/gi, 'então');
+
+  // strip a leading "e " used only for "tanto...e..." (both...and) phrasing
+  s = s.replace(/^\s*e\s+/i, ' ');
+
+  // "nem X nem Y" -> ¬(X) ∧ ¬(Y)
+  s = s.replace(/\bnem\b(.+?)\bnem\b(.+)/i, (m, a, b) => ` ¬ ( ${a.trim()} ) ∧ ¬ ( ${b.trim()} ) `);
+
+  // "X se e somente se Y" / "se e só se" / "sse" -> X ↔ Y
+  s = s.replace(/\bse\s+e\s+somente\s+se\b/gi, ' ↔ ');
+  s = s.replace(/\bse\s+e\s+s[oó]\s+se\b/gi, ' ↔ ');
+  s = s.replace(/\bsse\b/gi, ' ↔ ');
+
+  // "se X, então Y" -> (X) → (Y)   [top-level, single occurrence]
+  let condFound = false;
+  s = s.replace(/\bse\b(.+?),?\s*\bentão\b(.+)/i, (m, ant, cons) => {
+    condFound = true;
+    return ` ( ${ant.trim()} ) → ( ${cons.trim()} ) `;
+  });
+  // "se X, Y" (sem "então" — condicional implícita, antecedente primeiro) -> (X) → (Y)
+  if (!condFound){
+    s = s.replace(/\bse\b(.+?),(.+)/i, (m, ant, cons) => {
+      condFound = true;
+      return ` ( ${ant.trim()} ) → ( ${cons.trim()} ) `;
+    });
+  }
+  // "Y, se X" (consequente primeiro, ex.: "estudo, se passo no exame") -> (X) → (Y)
+  if (!condFound){
+    s = s.replace(/(.+),\s*se\b(.+)/i, (m, cons, ant) => {
+      condFound = true;
+      return ` ( ${ant.trim()} ) → ( ${cons.trim()} ) `;
+    });
+  }
+  // "X, logo Y" — dentro de uma única proposição, "logo" funciona como "então" (condicional)
+  if (!condFound){
+    s = s.replace(/(.+?),?\s*\blogo\b(.+)/i, (m, ant, cons) => {
+      condFound = true;
+      return ` ( ${ant.trim()} ) → ( ${cons.trim()} ) `;
+    });
+  }
+
+  // exclusive or: "ou A ou B" (duplo "ou") -> A ∨/ B — a convenção clássica para disjunção exclusiva
+  s = s.replace(/\bou\b(.+?)\bou\b(.+)/i, (m, a, b) => ` ( ${a.trim()} ) ∨/ ( ${b.trim()} ) `);
+  // também aceita "ou exclusivamente", "xor" e "X ou Y, mas não ambos"
+  s = s.replace(/\bou\s+exclusivamente\b/gi, ' ∨/ ');
+  s = s.replace(/\bxor\b/gi, ' ∨/ ');
+  s = s.replace(/(.+?)\bou\b(.+?),?\s*mas não ambos\b/i, (m, a, b) => ` ( ${a.trim()} ) ∨/ ( ${b.trim()} ) `);
+
+  // negation
+  s = s.replace(/\bnão\b/gi, ' ¬ ');
+
+  // and / or
+  s = s.replace(/\be\b/gi, ' ∧ ');
+  s = s.replace(/\bou\b/gi, ' ∨ ');
+
+  // now scan for symbols + parentheses, collecting phrase runs in between
+  const symbolChars = '¬∧∨→↔()';
+  let out = '';
+  let buffer = '';
+  // shared across calls (e.g. across premises + conclusion of one argument)
+  // so the same phrase always gets the same letter
+  const phraseMap = shared ? shared.phraseMap : new Map();
+  const legend = shared ? shared.legend : [];
+  const codeRef = shared || { nextCode: 80 };
+
+  function flushBuffer(){
+    let phrase = buffer.trim().replace(/\s+/g, ' ');
+    phrase = phrase.replace(/^[.,;:!?]+|[.,;:!?]+$/g, '').trim();
+    buffer = '';
+    if (!phrase) return;
+    const norm = phrase.toLowerCase();
+    let letter = phraseMap.get(norm);
+    if (!letter){
+      if (codeRef.nextCode > 90) throw new Error('Encontrei mais de 6 proposições diferentes — tenta simplificar a frase.');
+      letter = String.fromCharCode(codeRef.nextCode);
+      codeRef.nextCode++;
+      phraseMap.set(norm, letter);
+      legend.push({ letter, phrase });
+    }
+    out += letter + ' ';
+  }
+
+  for (let idx = 0; idx < s.length; idx++){
+    const ch = s[idx];
+    if (ch === '∨' && s[idx + 1] === '/'){
+      flushBuffer();
+      out += '∨/ ';
+      idx++;
+      continue;
+    }
+    if (symbolChars.includes(ch)){
+      flushBuffer();
+      out += ch + ' ';
+    } else {
+      buffer += ch;
+    }
+  }
+  flushBuffer();
+
+  let symbolic = out.trim().replace(/\s+/g, ' ');
+  if (legend.length === 0) throw new Error('Não consegui identificar nenhuma proposição na frase.');
+
+  // the construction above adds parentheses defensively around every
+  // clause; re-parse and re-print through fmt() to drop the ones that
+  // aren't actually needed (e.g. around single letters)
+  try{
+    symbolic = fmt(parseFormula(symbolic));
+  } catch(e){
+    // if something unexpected happens, fall back to the unsimplified version
+  }
+
+  return { symbolic, legend };
+}
+
+// Argument mode: splits on "logo" into premises (before) and conclusion
+// (after). Premises can be several sentences, separated by "." or ";".
+function translateNaturalArgument(raw){
+  if (!raw.trim()) throw new Error('Escreve um argumento primeiro.');
+  const parts = raw.split(/\blogo\b/i);
+  if (parts.length < 2) throw new Error('Não encontrei a palavra "logo" a separar as premissas da conclusão. Ex.: "Chove. Logo, a rua fica molhada."');
+  if (parts.length > 2) throw new Error('Só pode haver um "logo" por argumento.');
+
+  const premiseSentences = parts[0].split(/[.;]/).map(s => s.trim()).filter(Boolean);
+  if (premiseSentences.length === 0) throw new Error('Escreve pelo menos uma premissa antes de "logo".');
+
+  const conclusionText = parts[1].trim().replace(/^,\s*/, '').trim();
+  if (!conclusionText) throw new Error('Escreve a conclusão depois de "logo".');
+
+  const shared = { phraseMap: new Map(), legend: [], nextCode: 80 };
+  const premises = premiseSentences.map(s => translateNatural(s, shared).symbolic);
+  const conclusion = translateNatural(conclusionText, shared).symbolic;
+
+  return { premises, conclusion, legend: shared.legend };
+}
+
+
+function formatDictPhrase(phrase){
+  let p = phrase.trim();
+  if (!p) return p;
+  p = p.charAt(0).toUpperCase() + p.slice(1);
+  if (!/[.!?]$/.test(p)) p += '.';
+  return p;
+}
+
+function renderTranslationPreview(symbolic, legend){
+  document.getElementById('tp-formula').innerHTML = symbolicToHtml(symbolic);
+  const legendEl = document.getElementById('tp-legend');
+  legendEl.innerHTML = legend.map(item =>
+    `<div class="tp-entry"><span class="tp-letter">${item.letter}</span><span class="tp-phrase">${escapeHtml(formatDictPhrase(item.phrase))}</span></div>`
+  ).join('');
+  document.getElementById('translation-preview').style.display = 'block';
+}
+
+let nlMode = 'proposicao';
+
+document.querySelectorAll('.nl-mode-btn[data-mode]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.nl-mode-btn[data-mode]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    nlMode = btn.dataset.mode;
+    document.getElementById('natural-text').placeholder = nlMode === 'argumento'
+      ? 'ex.: Se chove, então a rua fica molhada. Chove. Logo, a rua fica molhada.'
+      : 'ex.: Se chove, então a rua fica molhada.';
+    document.getElementById('translation-preview').style.display = 'none';
+    hideError();
+  });
+});
+
+document.getElementById('translate-btn').addEventListener('click', () => {
+  const text = document.getElementById('natural-text').value;
+  try{
+    if (nlMode === 'argumento'){
+      const { premises, conclusion, legend } = translateNaturalArgument(text);
+      const display = `${premises.join(', ')} ∴ ${conclusion}`;
+      renderTranslationPreview(display, legend);
+      formulaInput.value = display;
+      hideError();
+      generate();
+    } else {
+      const { symbolic, legend } = translateNatural(text);
+      renderTranslationPreview(symbolic, legend);
+      formulaInput.value = symbolic;
+      hideError();
+      generate();
+    }
+  } catch(e){
+    document.getElementById('translation-preview').style.display = 'none';
+    showError(e.message || 'Não consegui traduzir esta frase.');
+  }
+});
+
+document.getElementById('natural-text').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)){
+    document.getElementById('translate-btn').click();
+  }
+});
+
+/* ---------- Random formula generator ---------- */
+
+const LETTER_POOL = ['P', 'Q', 'R'];
+
+function shuffled(arr){
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function randomNode(vars, depth){
+  const isLeaf = depth <= 0 || Math.random() < 0.35;
+  if (isLeaf){
+    const v = { type: 'var', name: vars[Math.floor(Math.random() * vars.length)] };
+    return Math.random() < 0.25 ? { type: 'not', arg: v } : v;
+  }
+  const ops = ['and', 'or', 'xor', 'implies', 'iff'];
+  const op = ops[Math.floor(Math.random() * ops.length)];
+  const l = randomNode(vars, depth - 1);
+  const r = randomNode(vars, depth - 1);
+  let node = { type: op, l, r };
+  if (Math.random() < 0.15) node = { type: 'not', arg: node };
+  return node;
+}
+
+function randomFormulaString(){
+  const nVars = 2 + Math.floor(Math.random() * 2); // 2 or 3
+  const vars = LETTER_POOL.slice(0, nVars); // always P, then Q, then R — never skip ahead
+  const depth = 2 + Math.floor(Math.random() * 2); // 2 or 3
+  let node, text;
+  let attempts = 0;
+  // avoid degenerate results, and make sure every selected letter actually shows up
+  do {
+    node = randomNode(vars, depth);
+    text = fmt(node);
+    attempts++;
+  } while ((text.length < 3 || !vars.every(v => text.includes(v))) && attempts < 40);
+  return text;
+}
+
+document.getElementById('random-formula-btn').addEventListener('click', () => {
+  document.getElementById('argument-panel').style.display = 'none';
+  document.getElementById('translation-preview').style.display = 'none';
+  resultsBox.style.display = 'none';
+  hideError();
+
+  const f = randomFormulaString();
+  pendingExercise = { type: 'formula', formula: f };
+
+  document.getElementById('exercise-content').innerHTML =
+    `<span class="ex-premise">${symbolicToHtml(f)}</span>`;
+  document.getElementById('exercise-card').classList.add('show');
+});
+
+/* ---------- Classic argument forms ---------- */
+
+const ARGUMENT_FORMS = [
+  { id: 'mp', name: 'Modus Ponens', abbr: 'MP', category: 'valid', vars: 2,
+    premises: ['A → B', 'A'], conclusion: 'B' },
+  { id: 'mt', name: 'Modus Tollens', abbr: 'MT', category: 'valid', vars: 2,
+    premises: ['A → B', '¬B'], conclusion: '¬A' },
+  { id: 'hs', name: 'Silogismo Hipotético', abbr: 'SH', category: 'valid', vars: 3,
+    premises: ['A → B', 'B → C'], conclusion: 'A → C' },
+  { id: 'ds', name: 'Silogismo Disjuntivo', abbr: 'SD', category: 'valid', vars: 2,
+    premises: ['A ∨ B', '¬A'], conclusion: 'B' },
+  { id: 'dn2', name: 'Dupla Negação', abbr: 'DN', category: 'valid', vars: 1,
+    premises: ['¬¬A'], conclusion: 'A' },
+  { id: 'contra', name: 'Contraposição', abbr: 'CP', category: 'valid', vars: 2,
+    premises: ['A → B'], conclusion: '¬B → ¬A' },
+  { id: 'dm1', name: 'Leis de De Morgan', abbr: 'DM', category: 'valid', vars: 2,
+    premises: ['¬(A ∧ B)'], conclusion: '¬A ∨ ¬B' },
+  { id: 'dm2', name: 'Leis de De Morgan', abbr: 'DM', category: 'valid', vars: 2,
+    premises: ['¬(A ∨ B)'], conclusion: '¬A ∧ ¬B' },
+  { id: 'aac', name: 'Falácia da Afirmação do Consequente', abbr: 'AC', category: 'fallacy', vars: 2,
+    premises: ['A → B', 'B'], conclusion: 'A' },
+  { id: 'nan', name: 'Falácia da Negação do Antecedente', abbr: 'NA', category: 'fallacy', vars: 2,
+    premises: ['A → B', '¬A'], conclusion: '¬B' }
+];
+
+function substituteTemplate(str, mapping){
+  return str.split('').map(ch => mapping[ch] || ch).join('');
+}
+
+function buildArgument(form){
+  const placeholders = ['A', 'B', 'C'].slice(0, form.vars);
+  const chosenLetters = LETTER_POOL.slice(0, form.vars);
+  const mapping = {};
+  placeholders.forEach((p, i) => { mapping[p] = chosenLetters[i]; });
+  const premises = form.premises.map(p => substituteTemplate(p, mapping));
+  const conclusion = substituteTemplate(form.conclusion, mapping);
+  return { name: form.name, abbr: form.abbr, category: form.category, premises, conclusion };
+}
+
+function pickArgument(id){
+  const form = ARGUMENT_FORMS.find(f => f.id === id) || ARGUMENT_FORMS[0];
+  return buildArgument(form);
+}
+
+function randomArgumentNode(vars){
+  const depth = 1 + Math.floor(Math.random() * 2); // 1 or 2
+  return randomNode(vars, depth);
+}
+
+function buildRandomArgument(){
+  const nVars = 2 + Math.floor(Math.random() * 2); // 2 or 3
+  const vars = LETTER_POOL.slice(0, nVars); // always P, then Q, then R — never skip ahead
+  const nPremises = Math.random() < 0.5 ? 2 : 3;
+  let premises, conclusion, attempts = 0;
+  // regenerate until every selected letter shows up somewhere in the argument
+  do {
+    premises = [];
+    for (let i = 0; i < nPremises; i++){
+      premises.push(fmt(randomArgumentNode(vars)));
+    }
+    conclusion = fmt(randomArgumentNode(vars));
+    attempts++;
+  } while (!vars.every(v => (premises.join(' ') + conclusion).includes(v)) && attempts < 40);
+  return { name: 'Argumento aleatório', abbr: null, premises, conclusion };
+}
+
+function attachValidityInfo(arg){
+  const badRowIdx = lastRows.findIndex(r => !r.finalVal);
+  if (badRowIdx !== -1){
+    arg.category = 'fallacy';
+    arg.counterexample = lastVars.map(v => `${v} = ${lastRows[badRowIdx].env[v] ? 'V' : 'F'}`).join(', ');
+    arg.counterexampleRow = badRowIdx + 1;
+  } else {
+    arg.category = 'valid';
+    arg.counterexample = null;
+    arg.counterexampleRow = null;
+  }
+}
+
+function renderArgument(arg){
+  const nameEl = document.getElementById('argument-name');
+  if (arg.abbr){
+    nameEl.innerHTML = `${escapeHtml(arg.name)} <span>(${arg.abbr})</span>`;
+  } else {
+    nameEl.textContent = arg.name;
+  }
+
+  const badgeEl = document.getElementById('argument-badge');
+  if (arg.category === 'valid'){
+    badgeEl.textContent = arg.abbr ? 'Forma válida' : 'Argumento válido';
+    badgeEl.className = 'verdict-badge badge-taut';
+  } else {
+    badgeEl.textContent = arg.abbr ? 'Falácia formal' : 'Argumento inválido';
+    badgeEl.className = 'verdict-badge badge-contra';
+  }
+
+  const linesEl = document.getElementById('argument-lines');
+  let html = '';
+  arg.premises.forEach((p) => {
+    html += `<span class="a-line">${symbolicToHtml(p)}</span>`;
+  });
+  html += `<span class="a-line a-concl">∴ ${symbolicToHtml(arg.conclusion)}</span>`;
+  linesEl.innerHTML = html;
+
+  const ceEl = document.getElementById('argument-counterexample');
+  if (arg.category === 'valid'){
+    ceEl.innerHTML = `<b>Porque é válido:</b> em todas as linhas da tabela a coluna do operador principal (destacada) dá V — não há nenhuma combinação de valores em que as premissas sejam verdadeiras e a conclusão falsa.`;
+    ceEl.classList.add('show');
+    ceEl.classList.add('valid');
+  } else if (arg.counterexample){
+    ceEl.innerHTML = `<b>Porque é inválido:</b> podemos observar que quando ${escapeHtml(arg.counterexample)}, todas as premissas são verdadeiras e a conclusão é falsa — é a linha destacada a vermelho na tabela que prova isso.`;
+    ceEl.classList.add('show');
+    ceEl.classList.remove('valid');
+  } else {
+    ceEl.textContent = '';
+    ceEl.classList.remove('show');
+    ceEl.classList.remove('valid');
+  }
+
+  document.getElementById('argument-panel').style.display = 'block';
+}
+
+document.getElementById('argument-select').addEventListener('change', () => {
+  document.getElementById('translation-preview').style.display = 'none';
+  const id = document.getElementById('argument-select').value;
+  const arg = pickArgument(id);
+  const combined = `(${arg.premises.join(') ∧ (')}) → (${arg.conclusion})`;
+  formulaInput.value = combined;
+  hideError();
+  pendingIsArgument = true;
+  pendingArgumentParts = { premises: arg.premises, conclusion: arg.conclusion };
+  generate();
+  attachValidityInfo(arg);
+  renderArgument(arg);
+});
+
+document.getElementById('random-argument-btn').addEventListener('click', () => {
+  document.getElementById('translation-preview').style.display = 'none';
+  document.getElementById('argument-panel').style.display = 'none';
+  resultsBox.style.display = 'none';
+  hideError();
+
+  const arg = buildRandomArgument();
+  pendingExercise = { type: 'argument', arg };
+
+  let html = arg.premises.map(p => `<span class="ex-premise">${symbolicToHtml(p)}</span>`).join('');
+  html += `<span class="ex-concl">∴ ${symbolicToHtml(arg.conclusion)}</span>`;
+  document.getElementById('exercise-content').innerHTML = html;
+  document.getElementById('exercise-card').classList.add('show');
+});
+
+document.getElementById('show-solution-btn').addEventListener('click', () => {
+  if (!pendingExercise) return;
+  hideError();
+  if (pendingExercise.type === 'formula'){
+    formulaInput.value = pendingExercise.formula;
+    generate();
+  } else {
+    const arg = pendingExercise.arg;
+    const combined = `(${arg.premises.join(') ∧ (')}) → (${arg.conclusion})`;
+    formulaInput.value = combined;
+    pendingIsArgument = true;
+    pendingArgumentParts = { premises: arg.premises, conclusion: arg.conclusion };
+    generate();
+    attachValidityInfo(arg);
+    renderArgument(arg);
+  }
+});
+
+/* ---------- Input tabs ---------- */
+
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => { p.hidden = true; });
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).hidden = false;
+  });
+});
+
+// no example pre-loaded — table only appears after the person asks for one
+document.getElementById('footer-year').textContent = new Date().getFullYear();
+
+// register service worker (needed for the PWA / Play Store version — harmless elsewhere)
+if ('serviceWorker' in navigator){
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('service-worker.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
